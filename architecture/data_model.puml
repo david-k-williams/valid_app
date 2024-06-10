@@ -1,0 +1,63 @@
+@startuml
+
+entity Customer {
+    * CustomerID : uuid
+    --
+    FirstName : varchar(255)
+    LastName : varchar(255)
+    Email : varchar(255)
+    PhoneNumber : varchar(20)
+    DateOfBirth : date
+    Address : varchar(255)
+    City : varchar(255)
+    State : varchar(255)
+    PostalCode : varchar(20)
+    Country : varchar(255)
+}
+
+entity IncomeStatement {
+    * IncomeStatementID : uuid
+    --
+    StatementDate : timestamp
+    Earnings : numeric(15,2)
+    PlatformName : varchar(50)
+    --
+    * CustomerID : uuid
+}
+
+entity LinkedPlatformAccount {
+    * AccountID : uuid
+    --
+    PlatformName : varchar(50)
+    PlatformAccountID : varchar(255)
+    --
+    * CustomerID : uuid
+}
+
+entity ProofOfIncomeReport {
+    * ReportID : uuid
+    --
+    GeneratedDate : timestamp
+    ValidUntilDate : timestamp
+    TotalEarnings : numeric(15,2)
+    --
+    * CustomerID : uuid
+}
+
+entity SimulatedPaystub {
+    * PaystubID : uuid
+    --
+    GeneratedDate : timestamp
+    PeriodStartDate : date
+    PeriodEndDate : date
+    TotalEarnings : numeric(15,2)
+    --
+    * CustomerID : uuid
+}
+
+Customer ||--o{ IncomeStatement : "has"
+Customer ||--o{ LinkedPlatformAccount : "has"
+Customer ||--o{ ProofOfIncomeReport : "has"
+Customer ||--o{ SimulatedPaystub : "has"
+
+@enduml

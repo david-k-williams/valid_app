@@ -1,0 +1,65 @@
+@startuml
+!define rectangle(entity, $bgcolor, $fgcolor) entity $bgcolor $fgcolor
+!define RECTANGLE(container, $bgcolor, $fgcolor) container $bgcolor $fgcolor
+
+' Define the System Context
+rectangle SystemContext {
+    RECTANGLE(ConsumerApp, #ffcc00, #000000) {
+        :Flutter;
+        :Provide a unified platform for gig workers to manage and submit their income verification data across Android, iOS, and web.
+    }
+    
+    RECTANGLE(Database, #00ccff, #000000) {
+        :Supabase;
+        :Store and manage user data securely, leveraging the free tier until monetization is feasible.
+    }
+    
+    RECTANGLE(CoreServices, #cc00ff, #000000) {
+        :Dart (Rest API built on Dart Frog);
+        :Develop the core backend services, including the data model and the OCR component to process paystubs using Google ML.
+    }
+    
+    RECTANGLE(OCRIntegration, #ff6600, #000000) {
+        :Dart (Rest API built on Dart Frog);
+        :Implement OCR to parse uploaded paystubs and convert them into structured data for verification.
+    }
+    
+    RECTANGLE(IdentityAccessManagement, #00ff99, #000000) {
+        :Supabase;
+        :Manage user authentication and access control to ensure secure data handling and privacy.
+    }
+}
+
+' Define the Containers
+rectangle Containers {
+    RECTANGLE(CoreServicesContainer, #cc00ff, #000000) {
+        :Dart (Rest API built on Dart Frog);
+        :Develop the core backend services, including the data model and the OCR component to process paystubs using Google ML.
+    }
+    
+    RECTANGLE(OCRContainer, #ff6600, #000000) {
+        :Dart (Rest API built on Dart Frog);
+        :Implement OCR to parse uploaded paystubs and convert them into structured data for verification.
+    }
+    
+    container ManagedKubernetesService {
+        RECTANGLE(CoreServices, #cc00ff, #000000) {
+            :Dart (Rest API built on Dart Frog);
+            :Develop the core backend services, including the data model and the OCR component to process paystubs using Google ML.
+        }
+        
+        RECTANGLE(OCRIntegration, #ff6600, #000000) {
+            :Dart (Rest API built on Dart Frog);
+            :Implement OCR to parse uploaded paystubs and convert them into structured data for verification.
+        }
+    }
+}
+
+' Define the relationships
+ConsumerApp --> CoreServices: Manages and submits data
+CoreServices --> Database: Stores and manages user data
+CoreServices --> OCRIntegration: Sends paystubs for OCR processing
+CoreServices --> IdentityAccessManagement: Manages authentication and access control
+OCRIntegration --> CoreServices: Sends structured data for verification
+
+@enduml
